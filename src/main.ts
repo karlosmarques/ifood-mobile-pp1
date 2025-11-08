@@ -5,7 +5,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
     app.enableCors({
-    origin: 'http://localhost:3000', //Dafni, se a porta que vcs estiverem usando for a 3000, pode deixar assim, mas se for outra, alterem, pfv! 😉
+    origin: 'http://localhost:3000', //Dafni, se a porta for essa pode deixar 3000, mas se for outra troca 😉
     credentials: true
   });
   await app.listen(process.env.PORT ?? 8000);
