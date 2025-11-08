@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Categoria {
+  id           Int           @id @default(autoincrement())
+  nome         String
+  
+  restaurantes Restaurante[] // 1:N com Restaurante
+}
+model Restaurante {
+  id                Int          @id @default(autoincrement())
+  nome              String
+  descricao         String
+  imagemUrl         String
+  categoriaId       Int
+  categoria         Categoria    @relation(fields: [categoriaId], references: [id])
+  produtos          Produto[]
+  pedidos           Pedido[]
+}
+
+model Produto {
+  id            Int          @id @default(autoincrement())
+  nome          String
+  descricao     String
+  preco         Float
+  imagemUrl     String
+  restauranteId Int
+  restaurante   Restaurante   @relation(fields: [restauranteId], references: [id])
+  itensPedido   ItemPedido[]
+}
+
+model Usuario {
+  id         Int        @id @default(autoincrement())
+  nome       String
+  email      String     @unique
+  senha String
+  enderecoId Int?
+  endereco   Endereco?  @relation(fields: [enderecoId], references: [id])
+  pedidos    Pedido[]
+}
+
+model Endereco {
+  id       Int       @id @default(autoincrement())
+  rua      String
+  numero   String
+  bairro   String
+  cidade   String
+  estado   String
+  cep      String
+  usuarios Usuario[]
+}
+
+model Pedido {
+  id             Int          @id @default(autoincrement())
+  usuarioId      Int
+  restauranteId  Int
+  dataPedido     DateTime     @default(now())
+  status         String
+  valorTotal     Float
+  usuario        Usuario      @relation(fields: [usuarioId], references: [id])
+  restaurante    Restaurante   @relation(fields: [restauranteId], references: [id])
+  itens          ItemPedido[]
+}
+
+model ItemPedido {
+  id          Int       @id @default(autoincrement())
+  pedidoId    Int
+  produtoId   Int
+  quantidade  Int
+  precoUnitario Float
+  pedido      Pedido    @relation(fields: [pedidoId], references: [id])
+  produto     Produto   @relation(fields: [produtoId], references: [id])
+}
