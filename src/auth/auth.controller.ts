@@ -19,7 +19,7 @@ export class AuthController {
         return await this.authService.login(body);
     }
 
-    @Post('esqueceusenha')
+    @Post('/esqueceusenha')
     async forgotPassword(@Body('email') email: string) {
         return await this.authService.forgotPassword(email);
     }
