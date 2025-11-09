@@ -71,5 +71,27 @@ export class AuthService {
 
     return { message: 'Email de recuperação enviado!' };
   }
+
+    async resetPassword(token: string, newPassword: string) {
+    try {
+     
+      const payload = this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET,
+      });
+
+      
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      
+      await this.prisma.usuario.update({
+        where: { id: payload.userId },
+        data: { senha: hashedPassword },
+      });
+
+      return { message: 'Senha atualizada com sucesso!' };
+    } catch (error) {
+      throw new UnauthorizedException('Token inválido ou expirado');
+    }
+  }
 }
 

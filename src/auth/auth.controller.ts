@@ -23,6 +23,11 @@ export class AuthController {
     async forgotPassword(@Body('email') email: string) {
         return await this.authService.forgotPassword(email);
     }
+
+    @Post('redefinirsenha')
+    async resetPassword(@Body('token') token: string,@Body('newPassword') newPassword: string,) {
+        return await this.authService.resetPassword(token, newPassword);
+    }
 }
 
 
