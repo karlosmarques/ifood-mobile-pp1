@@ -16,5 +16,4 @@ export class RestauranteService {
         return todos;
     }
 
-
 }
