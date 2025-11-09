@@ -50,7 +50,7 @@ export class AuthService {
             return {token};
         }
 
-        async forgotPassword(email: string) {
+    async forgotPassword(email: string) {
     
     const user = await this.prisma.usuario.findUnique({
       where: { email },
@@ -72,7 +72,7 @@ export class AuthService {
     return { message: 'Email de recuperação enviado!' };
   }
 
-    async resetPassword(token: string, newPassword: string) {
+    async resetPassword(token: string, novaSenha: string) {
     try {
      
       const payload = this.jwtService.verify(token, {
@@ -80,11 +80,11 @@ export class AuthService {
       });
 
       
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      const hashedPassword = await bcrypt.hash(novaSenha, 10);
 
       
       await this.prisma.usuario.update({
-        where: { id: payload.userId },
+        where: { id: payload.sub },
         data: { senha: hashedPassword },
       });
 
