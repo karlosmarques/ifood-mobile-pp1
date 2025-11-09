@@ -25,8 +25,8 @@ export class AuthController {
     }
 
     @Post('redefinirsenha')
-    async resetPassword(@Body('token') token: string,@Body('newPassword') newPassword: string,) {
-        return await this.authService.resetPassword(token, newPassword);
+    async resetPassword(@Body('token') token: string,@Body('novaSenha') novaSenha: string,) {
+        return await this.authService.resetPassword(token, novaSenha);
     }
 }
 
