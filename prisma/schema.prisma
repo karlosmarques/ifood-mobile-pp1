@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,73 +7,86 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Categoria {
-  id           Int           @id @default(autoincrement())
-  nome         String
-  
-  restaurantes Restaurante[] // 1:N com Restaurante
-}
-model Restaurante {
-  id                Int          @id @default(autoincrement())
-  nome              String
-  descricao         String
-  imagemUrl         String
-  categoriaId       Int
-  categoria         Categoria    @relation(fields: [categoriaId], references: [id])
-  produtos          Produto[]
-  pedidos           Pedido[]
+model categoria {
+  id          Int           @id @default(autoincrement())
+  nome        String
+  imagemUrl   String?       @db.VarChar(255)
+  restaurante restaurante[]
 }
 
-model Produto {
+model endereco {
+  id      Int       @id @default(autoincrement())
+  rua     String
+  numero  String
+  bairro  String
+  cidade  String
+  estado  String
+  cep     String
+  usuario usuario[]
+}
+
+model itempedido {
+  id            Int     @id @default(autoincrement())
+  pedidoId      Int
+  produtoId     Int
+  quantidade    Int
+  precoUnitario Float
+  pedido        pedido  @relation(fields: [pedidoId], references: [id], map: "ItemPedido_pedidoId_fkey")
+  produto       produto @relation(fields: [produtoId], references: [id], map: "ItemPedido_produtoId_fkey")
+
+  @@index([pedidoId], map: "ItemPedido_pedidoId_fkey")
+  @@index([produtoId], map: "ItemPedido_produtoId_fkey")
+}
+
+model pedido {
+  id            Int          @id @default(autoincrement())
+  usuarioId     Int
+  restauranteId Int
+  dataPedido    DateTime     @default(now())
+  status        String
+  valorTotal    Float
+  itempedido    itempedido[]
+  restaurante   restaurante  @relation(fields: [restauranteId], references: [id], map: "Pedido_restauranteId_fkey")
+  usuario       usuario      @relation(fields: [usuarioId], references: [id], map: "Pedido_usuarioId_fkey")
+
+  @@index([restauranteId], map: "Pedido_restauranteId_fkey")
+  @@index([usuarioId], map: "Pedido_usuarioId_fkey")
+}
+
+model produto {
   id            Int          @id @default(autoincrement())
   nome          String
   descricao     String
   preco         Float
   imagemUrl     String
   restauranteId Int
-  restaurante   Restaurante   @relation(fields: [restauranteId], references: [id])
-  itensPedido   ItemPedido[]
+  itempedido    itempedido[]
+  restaurante   restaurante  @relation(fields: [restauranteId], references: [id], map: "Produto_restauranteId_fkey")
+
+  @@index([restauranteId], map: "Produto_restauranteId_fkey")
 }
 
-model Usuario {
-  id         Int        @id @default(autoincrement())
-  nome       String
-  email      String     @unique
-  senha String
-  enderecoId Int?
-  endereco   Endereco?  @relation(fields: [enderecoId], references: [id])
-  pedidos    Pedido[]
-}
-
-model Endereco {
-  id       Int       @id @default(autoincrement())
-  rua      String
-  numero   String
-  bairro   String
-  cidade   String
-  estado   String
-  cep      String
-  usuarios Usuario[]
-}
-
-model Pedido {
-  id             Int          @id @default(autoincrement())
-  usuarioId      Int
-  restauranteId  Int
-  dataPedido     DateTime     @default(now())
-  status         String
-  valorTotal     Float
-  usuario        Usuario      @relation(fields: [usuarioId], references: [id])
-  restaurante    Restaurante   @relation(fields: [restauranteId], references: [id])
-  itens          ItemPedido[]
-}
-
-model ItemPedido {
+model restaurante {
   id          Int       @id @default(autoincrement())
-  pedidoId    Int
-  produtoId   Int
-  quantidade  Int
-  precoUnitario Float
-  pedido      Pedido    @relation(fields: [pedidoId], references: [id])
-  produto     Produto   @relation(fields: [produtoId], references: [id])
+  nome        String
+  descricao   String
+  imagemUrl   String
+  categoriaId Int
+  pedido      pedido[]
+  produto     produto[]
+  categoria   categoria @relation(fields: [categoriaId], references: [id], map: "Restaurante_categoriaId_fkey")
+
+  @@index([categoriaId], map: "Restaurante_categoriaId_fkey")
+}
+
+model usuario {
+  id         Int       @id @default(autoincrement())
+  nome       String
+  email      String    @unique(map: "Usuario_email_key")
+  senha      String
+  enderecoId Int?
+  pedido     pedido[]
+  endereco   endereco? @relation(fields: [enderecoId], references: [id], map: "Usuario_enderecoId_fkey")
+
+  @@index([enderecoId], map: "Usuario_enderecoId_fkey")
 }
