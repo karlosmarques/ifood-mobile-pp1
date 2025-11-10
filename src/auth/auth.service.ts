@@ -1,11 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import type { RegisterDto } from './dtos/auth';
-import { UnauthorizedException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
-import type { LoginDto } from './dtos/auth';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from 'bcrypt';
 import { MailService } from 'src/email/email.service';
+import { PrismaService } from '../prisma/prisma.service';
+import type { LoginDto, RegisterDto } from './dtos/auth';
 
 
 @Injectable()
