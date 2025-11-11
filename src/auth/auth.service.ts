@@ -82,7 +82,7 @@ export class AuthService {
 
       
       await this.prisma.usuario.update({
-        where: { id: payload.sub },
+        where: { id: payload.userId },
         data: { senha: hashedPassword },
       });
 
