@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PerfilService {
-
+    
     constructor( private prisma:PrismaService){}
 
     
