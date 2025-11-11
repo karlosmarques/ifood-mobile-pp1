@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards,Request, Patch, Body } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards,Request, Patch, Body, Delete } from '@nestjs/common';
 import { PerfilService } from './perfil.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import type { editarPerfilDto } from './dtos/dtos';
@@ -19,6 +19,12 @@ export class PerfilController {
     @Patch('')
     async update(@Request() req,@Body() Body:editarPerfilDto){
         return await this.perfilService.update(req.user.sub,Body);
+    }
+
+    @UseGuards(AuthGuard)
+    @Delete()
+    async deletarPerfil(@Request() req){
+        return await this.perfilService.deletaPerfil(req.user.sub);
     }
 
 }

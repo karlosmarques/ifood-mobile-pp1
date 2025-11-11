@@ -34,6 +34,16 @@ export class PerfilService {
         }
        return user;
    }
+
+   async deletaPerfil(id:number){
+    const user = await this.prisma.usuario.delete({
+        where:{id}
+    })
+    if(!user){
+        throw new NotFoundException("Usuario não encontrado");
+    }
+    
 }
 
+}
 
