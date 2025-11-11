@@ -1,4 +1,4 @@
 export interface editarPerfilDto {
-    username: string;
+    nome: string;
     email: string;
 }
