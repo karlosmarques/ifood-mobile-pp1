@@ -32,7 +32,7 @@ export class PerfilService {
         if(!user){
             throw new NotFoundException("Usuario não encontrado");
         }
-       
+       return user;
    }
 }
 
