@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { editarPerfilDto } from './dtos/dtos';
 
 @Injectable()
 export class PerfilService {
@@ -16,9 +17,23 @@ export class PerfilService {
                 endereco:true
             }
         })
+        if (!pefil) {
+                throw new NotFoundException("Perfil não encontrado");
+            }
+
         return pefil
     
     }
+
+      async update(id:number,data:editarPerfilDto){
+        const user = await this.prisma.usuario.update({
+            where:{id},data:{...data}
+        })
+        if(!user){
+            throw new NotFoundException("Usuario não encontrado");
+        }
+       
+   }
 }
 
 
