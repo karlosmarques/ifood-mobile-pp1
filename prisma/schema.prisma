@@ -10,7 +10,7 @@ datasource db {
 model categoria {
   id          Int           @id @default(autoincrement())
   nome        String
-  imagemUrl   String
+  imagemUrl   String?
   restaurante restaurante[]
 }
 
