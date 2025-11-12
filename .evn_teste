@@ -1,0 +1,5 @@
+DATABASE_URL="mysql://aluno:ifpecjbg@localhost:3306/ifood"
+SECRET_KEY = "segredo"
+CLOUDINARY_CLOUD_NAME=seu_nome
+CLOUDINARY_API_KEY=sua_chave
+CLOUDINARY_API_SECRET=sua_senha
